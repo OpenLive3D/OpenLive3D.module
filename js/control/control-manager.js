@@ -254,6 +254,10 @@ function updateVRMScene(){
 }
 
 function updateEffect(){
+    let foregroundeffect = document.getElementById("foregroundeffect");
+    foregroundeffect.getContext("2d").clearRect(0, 0, foregroundeffect.width, foregroundeffect.height);
+    let backgroundeffect = document.getElementById("backgroundeffect");
+    backgroundeffect.getContext("2d").clearRect(0, 0, backgroundeffect.width, backgroundeffect.height);
     let alleffects = getAllEffects();
     Object.keys(alleffects).forEach(function(key){
         let effectlist = alleffects[key];

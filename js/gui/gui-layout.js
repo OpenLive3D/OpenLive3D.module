@@ -22,6 +22,14 @@ systembox.onmouseout = function(){
     }
 };
 
+// 2D effect canvas
+let foregroundeffect = document.getElementById("foregroundeffect");
+foregroundeffect.width = window.innerWidth;
+foregroundeffect.height = window.innerHeight;
+let backgroundeffect = document.getElementById("backgroundeffect");
+backgroundeffect.width = window.innerWidth;
+backgroundeffect.height = window.innerHeight;
+
 // 3D renderer
 let renderer = new THREE.WebGLRenderer({canvas: canvas, alpha: true});
 renderer.outputEncoding = THREE.sRGBEncoding;
@@ -60,6 +68,10 @@ function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    foregroundeffect.width = window.innerWidth;
+    foregroundeffect.height = window.innerHeight;
+    backgroundeffect.width = window.innerWidth;
+    backgroundeffect.height = window.innerHeight;
 }
 
 function resetCameraPos(pos){
@@ -291,13 +303,67 @@ function createLayout(){
                 itemcheck.onclick = function(){
                     if(itemcheck.checked){
                         effectitem['enableEffect']();
+                        itemdiv.style.display = "block";
                     }else{
                         effectitem['disableEffect']();
+                        itemdiv.style.display = "none";
                     }
                 }
                 effectgroup.appendChild(itemcheck);
                 let itemdiv = document.createElement('div');
+                itemdiv.style.display = "none";
                 effectgroup.appendChild(itemdiv);
+                if(effectitem['parameters']){
+                    Object.keys(effectitem['parameters']).forEach(function(parameter){
+                        let partext = document.createElement('text');
+                        partext.className = "w3-tooltip";
+                        partext.style.color = "#fff";
+                        partext.innerHTML = " " + parameter + " ";
+                        itemdiv.appendChild(partext);
+                        itemdiv.appendChild(document.createElement("br"));
+                        if(parameter == "color"){
+                            let parColor = document.createElement('input');
+                            parColor.setAttribute("type", "color");
+                            parColor.setAttribute("value", effectitem['parameters'][parameter]);
+                            parColor.onchange = function myFunction(){
+                                effectitem['parameters'][parameter] = parColor.value;
+                            };
+                            itemdiv.appendChild(parColor);
+                        }else{
+                            let parArr = effectitem['parameters'][parameter];
+                            let parrange = document.createElement('input');
+                            parrange.setAttribute("type", "range");
+                            parrange.setAttribute("min", 0);
+                            parrange.setAttribute("max", 1000);
+                            let setrange = parArr[2] - parArr[1];
+                            let setvalue = (parArr[0] - parArr[1]) * 1000 / setrange;
+                            parrange.setAttribute("value", setvalue);
+                            parrange.onchange = function(){
+                                let newvalue = Math.floor(parrange.value / 1000 * setrange + parArr[1]);
+                                parval.value = newvalue;
+                                parval.onchange();
+                            }
+                            itemdiv.appendChild(parrange);
+                            let parval = document.createElement("input");
+                            parval.style.textAlign = "right";
+                            parval.style.width = "100px";
+                            parval.value = parArr[0];
+                            parval.onchange = function(){
+                                console.log(parameter, parval.value);
+                                if(parval.value < parArr[1]){
+                                    parval.value = parArr[1];
+                                }else if(parval.value < parArr[2]){
+                                }else{
+                                    parval.value = parArr[2];
+                                }
+                                let newvalue = Math.floor((parval.value - parArr[1]) * 1000 / setrange);
+                                parrange.setAttribute("value", newvalue);
+                                parArr[0] = parval.value;
+                            };
+                            itemdiv.appendChild(parval);
+                        }
+                    });
+                }
             }
             effectgroup.appendChild(document.createElement("br"));
         }
