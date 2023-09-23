@@ -12,15 +12,10 @@ function getRainEP(key){
         return rainParameters[key][0];
     }
 }
-// const n = 500;
-// const rainSpeed = 32;
 const rainLengthMin = 0.4;
 const rainLengthMax = 1.2;
-// const rainAngle = 0;
 const rainAngleRange = 10;
 const rainProb = 0.05;
-// const rainLineWidth = 3;
-// const rainColor = 'rgba(174,184,194,0.9)';
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }

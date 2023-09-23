@@ -22,7 +22,9 @@ function getAllEffects(){
             'describe': 'Blur the output screen',
             'type': 'screen', // screen | object | particle
             'enableEffect': enableBlurEffect,
-            'disableEffect': disableBlurEffect
+            'disableEffect': disableBlurEffect,
+            'updateEffect': updateBlurEffect,
+            'parameters': blurParameters
         }],
         "Flare / Lighting": [{
             'key': 'LIGHT_COLOR',
@@ -30,7 +32,9 @@ function getAllEffects(){
             'describe': 'The color of the directional light',
             'type': 'flare', // screen | object | particle
             'enableEffect': adjustLightColorEffect,
-            'disableEffect': resetLightColorEffect
+            'disableEffect': resetLightColorEffect,
+            'updateEffect': updateLightColorEffect,
+            'parameters': lightColorParameters
         }],
         "Particle Effects": [{
             'key': 'RAIN',
