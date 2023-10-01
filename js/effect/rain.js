@@ -9,7 +9,7 @@ function getRainEP(key){
     if(key == 'color'){
         return rainParameters['color'];
     }else{
-        return rainParameters[key][0];
+        return parseInt(rainParameters[key][0]);
     }
 }
 const rainLengthMin = 0.4;
