@@ -52,14 +52,6 @@ function checkVIHealthQueue(state){
 function checkHealth(){
     let viFPS = getCMV("VI_LOOP_COUNTER") / getCMV("HEALTH_RATE");
     let mlFPS = getCMV("ML_LOOP_COUNTER") / getCMV("HEALTH_RATE");
-    let dynamicMLDura = getCMV("DYNA_ML_DURATION");
-    if(isNaN(dynamicMLDura)){
-        setCMV("DYNA_ML_DURATION", getCMV("MIN_ML_DURATION"));
-    }
-    dynamicMLDura *= (mlFPS / getCMV("ML_FPS_LIMIT"));
-    dynamicMLDura = Math.max(dynamicMLDura, getCMV("MIN_ML_DURATION"));
-    dynamicMLDura = Math.min(dynamicMLDura, getCMV("MAX_ML_DURATION"));
-    setCMV("DYNA_ML_DURATION", dynamicMLDura);
     let dynamicVIDura = getCMV("DYNA_VI_DURATION");
     if(isNaN(dynamicVIDura)){
         dynamicVIDura = getCMV("MIN_VI_DURATION");
@@ -68,6 +60,14 @@ function checkHealth(){
     dynamicVIDura = Math.max(dynamicVIDura, getCMV("MIN_VI_DURATION"));
     dynamicVIDura = Math.min(dynamicVIDura, getCMV("MAX_VI_DURATION"));
     setCMV("DYNA_VI_DURATION", dynamicVIDura);
+    let dynamicMLDura = getCMV("DYNA_ML_DURATION");
+    if(isNaN(dynamicMLDura)){
+        dynamicMLDura = getCMV("MIN_ML_DURATION");
+    }
+    dynamicMLDura *= (mlFPS / Math.min(viFPS, getCMV("ML_FPS_LIMIT")));
+    dynamicMLDura = Math.max(dynamicMLDura, getCMV("MIN_ML_DURATION"));
+    dynamicMLDura = Math.min(dynamicMLDura, getCMV("MAX_ML_DURATION"));
+    setCMV("DYNA_ML_DURATION", dynamicMLDura);
     setCMV("VI_LOOP_COUNTER", 0);
     setCMV("ML_LOOP_COUNTER", 0);
     viFPSQueue.push(viFPS);
